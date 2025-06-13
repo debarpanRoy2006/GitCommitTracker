@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    .settings-card {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    #settingsStatus {
+        margin-left: 15px;
+        display: none; /* Hidden by default */
+    }
+    body.bg-dark .settings-card {
+        background-color: #495057;
+        color: #f8f9fa;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    body.bg-dark .form-label {
+        color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="settings-card">
+        <h2 class="text-center mb-4">Application Settings</h2>
+
+        <form id="settingsForm">
+            <div class="mb-3">
+                <label for="themeSelect" class="form-label">Choose Theme:</label>
+                <select class="form-select" id="themeSelect" aria-label="Theme selection">
+                    <option value="light">Light Theme</option>
+                    <option value="dark">Dark Theme</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="defaultBranch" class="form-label">Default Repository Branch:</label>
+                <input type="text" class="form-control" id="defaultBranch" placeholder="e.g., main, master, dev">
+                <div class="form-text">This will be the default branch used when fetching commits.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+            <span id="settingsStatus" class="text-success fw-bold">Settings saved!</span>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const settingsForm = document.getElementById('settingsForm');
+        const themeSelect = document.getElementById('themeSelect');
+        const defaultBranchInput = document.getElementById('defaultBranch');
+        const settingsStatus = document.getElementById('settingsStatus');
+        const content = document.getElementById('content'); // Get content element from base.html
+
+        // Function to apply theme (also present in base.html, kept here for clarity if direct call needed)
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.body.classList.add('bg-dark', 'text-light');
+                document.body.classList.remove('bg-light', 'text-dark');
+                content.classList.add('bg-dark-content');
+                content.classList.remove('bg-white');
+                // Apply dark mode styles to cards and list items if they exist
+                document.querySelectorAll('.card, .list-group-item').forEach(el => {
+                    el.classList.add('bg-dark');
+                });
+                document.querySelectorAll('.form-control, .input-group-text').forEach(el => {
+                    el.classList.add('bg-dark');
+                });
+            } else {
+                document.body.classList.remove('bg-dark', 'text-light');
+                document.body.classList.add('bg-light', 'text-dark');
+                content.classList.remove('bg-dark-content');
+                content.classList.add('bg-white');
+                document.querySelectorAll('.card, .list-group-item').forEach(el => {
+                    el.classList.remove('bg-dark');
+                });
+                document.querySelectorAll('.form-control, .input-group-text').forEach(el => {
+                    el.classList.remove('bg-dark');
+                });
+            }
+        };
+
+        const loadSettings = () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedDefaultBranch = localStorage.getItem('defaultBranch') || 'main';
+
+            themeSelect.value = savedTheme;
+            defaultBranchInput.value = savedDefaultBranch;
+
+            // Apply theme on load via base.html's loadTheme, but this local applyTheme can be used for immediate feedback.
+            // applyTheme(savedTheme); // This call is handled by base.html's DOMContentLoaded
+        };
+
+        settingsForm.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const theme = themeSelect.value;
+            const defaultBranch = defaultBranchInput.value.trim() || 'main';
+
+            localStorage.setItem('theme', theme);
+            localStorage.setItem('defaultBranch', defaultBranch);
+
+            applyTheme(theme); // Apply theme immediately
+
+            settingsStatus.style.display = 'inline';
+            setTimeout(() => {
+                settingsStatus.style.display = 'none';
+            }, 2000);
+        });
+
+        // Initialize settings when the page loads
+        loadSettings();
+    });
+</script>
+{% endblock %}

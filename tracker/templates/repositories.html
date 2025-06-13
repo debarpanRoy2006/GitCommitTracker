@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Repositories - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Repo specific styles */
+    .repo-card {
+        border-left: 5px solid #17a2b8; /* Info color */
+        margin-bottom: 1.5rem;
+    }
+    .repo-stats span {
+        margin-right: 15px;
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+    .repo-stats span i {
+        margin-right: 5px;
+    }
+    .repo-language {
+        font-weight: bold;
+        color: #007bff; /* Primary color */
+    }
+    #loadingSpinner {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .list-group-item.text-info, .list-group-item.text-danger, .list-group-item.text-muted {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Explore GitHub Repositories</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form id="repoForm">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fab fa-github"></i></span>
+                    <input type="text" id="usernameInput" class="form-control" placeholder="Enter GitHub Username (e.g., mozilla)" required>
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Fetching repositories...</p>
+    </div>
+
+    <ul class="list-group shadow-sm" id="repoList">
+        <li class="list-group-item text-muted">Enter a GitHub username above to view repositories.</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block extra_body_scripts %}
+<script>
+    const usernameInputField = document.getElementById('usernameInput');
+    const repoForm = document.getElementById('repoForm');
+    const repoList = document.getElementById('repoList');
+    const loadingDiv = document.getElementById('loadingSpinner');
+
+    async function fetchRepositories(username) {
+        if (!username) {
+            repoList.innerHTML = '<li class="list-group-item text-muted">Please enter a GitHub username.</li>';
+            return;
+        }
+
+        loadingDiv.style.display = 'block';
+        repoList.innerHTML = ''; // Clear previous results
+        localStorage.setItem('lastUsername', username); // Save last searched username
+
+        try {
+            const response = await fetch(`/api/get_repos/?username=${username}`);
+            const data = await response.json();
+
+            if (data.error) {
+                repoList.innerHTML = `<li class="list-group-item text-danger">Error: ${data.error}</li>`;
+            } else if (data.repos && data.repos.length > 0) {
+                data.repos.forEach(repo => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item repo-card d-flex justify-content-between align-items-center';
+                    listItem.innerHTML = `
+                        <div>
+                            <h5><a href="${repo.html_url}" target="_blank" rel="noopener">${repo.name}</a></h5>
+                            <p class="mb-1 text-muted">${repo.description || 'No description provided.'}</p>
+                            <div class="repo-stats">
+                                <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
+                                <span><i class="fas fa-code-fork"></i> ${repo.forks_count}</span>
+                                ${repo.language ? `<span class="repo-language"><i class="fas fa-code"></i> ${repo.language}</span>` : ''}
+                            </div>
+                        </div>
+                        <a href="/dashboard/?username=${username}&repo=${repo.name}" class="btn btn-sm btn-info">View Commits on Dashboard</a>
+                    `;
+                    repoList.appendChild(listItem);
+                });
+            } else {
+                repoList.innerHTML = `<li class="list-group-item text-info">No public repositories found for ${username}.</li>`;
+            }
+        } catch (error) {
+            repoList.innerHTML = `<li class="list-group-item text-danger">An unexpected error occurred: ${error.message}</li>`;
+        } finally {
+            loadingDiv.style.display = 'none';
+        }
+    }
+
+    // Handle form submission to fetch repositories
+    repoForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = usernameInputField.value.trim();
+        fetchRepositories(username);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load last username from localStorage and fetch repositories automatically
+        const lastUsername = localStorage.getItem('dashboardUsername'); // Use 'dashboardUsername' from dashboard
+        if (lastUsername) {
+            usernameInputField.value = lastUsername;
+            fetchRepositories(lastUsername);
+        } else {
+            repoList.innerHTML = '<li class="list-group-item text-muted">Enter a GitHub username above to view repositories.</li>';
+        }
+    });
+</script>
+{% endblock %}

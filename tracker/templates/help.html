@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Help - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    .help-section {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .accordion-button:not(.collapsed) {
+        color: #007bff; /* Primary color for active accordion header */
+        background-color: #e7f1ff; /* Light background for active */
+        box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+    }
+    .accordion-button {
+        font-weight: bold;
+    }
+    .accordion-body {
+        background-color: #f8f9fa; /* Light background for body */
+        padding: 20px;
+    }
+    body.bg-dark .help-section {
+        background-color: #495057;
+        color: #f8f9fa;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    body.bg-dark .accordion-item {
+        background-color: #343a40; /* Darker background for accordion items */
+        border-color: #6c757d;
+    }
+    body.bg-dark .accordion-header .accordion-button {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+    body.bg-dark .accordion-button:not(.collapsed) {
+        color: #20c997; /* A contrasting color for active dark mode accordion header */
+        background-color: #3d444a; /* Slightly lighter dark background for active */
+    }
+    body.bg-dark .accordion-body {
+        background-color: #3d444a;
+        color: #ced4da;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="help-section">
+        <h2 class="mb-4">Help & FAQ</h2>
+        <p class="lead mb-5">Find answers to common questions about gitTracker.</p>
+
+        <div class="accordion" id="helpAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <i class="fas fa-question-circle me-2"></i> How do I track commits for a repository?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body">
+                        Navigate to the <a href="{% url 'dashboard' %}" class="text-primary">Dashboard</a>. Enter the GitHub username and the repository name in the respective fields. Click "Fetch Commits" to see the commit history.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <i class="fas fa-question-circle me-2"></i> Why am I seeing a "Rate Limit Exceeded" error?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body">
+                        GitHub's API has rate limits for unauthenticated requests (60 requests per hour per IP address). If you make too many requests within a short period, you might hit this limit. Please wait for some time (usually an hour) and try again.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <i class="fas fa-question-circle me-2"></i> How can I view a GitHub profile?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body">
+                        Visit the <a href="{% url 'profile' %}" class="text-primary">Profile</a> page. Enter the GitHub username in the provided input field and click "View Profile" to see public information about that user.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        <i class="fas fa-question-circle me-2"></i> Can I change the application's theme?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#helpAccordion">
+                    <div class="accordion-body">
+                        Yes, you can! Go to the <a href="{% url 'settings' %}" class="text-primary">Settings</a> page. There you will find a "Choose Theme" dropdown where you can select "Light Theme" or "Dark Theme". Your preference will be saved automatically.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 text-center">
+            <h3>Still need help?</h3>
+            <p>If your question isn't answered here, feel free to reach out:</p>
+            <p class="mb-2">
+                <i class="fas fa-envelope me-2"></i>Email us at: <a href="mailto:support@gittracker.com" class="text-primary fw-bold">support@gittracker.com</a>
+            </p>
+            <p class="mb-4">
+                <i class="fas fa-comment-dots me-2"></i>Live chat here (click the icon at the bottom right)
+            </p>
+            <p class="text-muted mt-3">Please allow up to 24-48 hours for an email response.</p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body_scripts %}
+    <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/03/22/14/20250322143833-WLKCAUV0.js"></script>
+    {% endblock %}

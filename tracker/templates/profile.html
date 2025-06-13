@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    .profile-card {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #007bff;
+        margin-bottom: 20px;
+    }
+    .profile-stats span {
+        margin-right: 20px;
+        font-size: 1.1em;
+    }
+    .profile-stats span i {
+        margin-right: 5px;
+        color: #007bff;
+    }
+    .profile-contact a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .profile-contact a:hover {
+        text-decoration: underline;
+    }
+    #profileData {
+        text-align: center;
+    }
+    #loadingSpinner {
+        display: none;
+        text-align: center;
+        margin-top: 50px;
+    }
+    #errorContainer {
+        display: none;
+        margin-top: 20px;
+    }
+    body.bg-dark .profile-card {
+        background-color: #495057;
+        color: #f8f9fa;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    body.bg-dark .profile-stats span {
+        color: #ced4da;
+    }
+    body.bg-dark .profile-stats span i {
+        color: #20c997; /* A contrasting color for dark mode icons */
+    }
+    body.bg-dark .profile-contact a {
+        color: #20c997;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Fetching profile data...</p>
+    </div>
+
+    <div id="errorContainer" class="alert alert-danger text-center" role="alert">
+        </div>
+
+    <div id="profileData" class="profile-card d-none">
+        <img id="profileAvatar" src="" alt="Profile Avatar" class="profile-avatar">
+        <h2 id="profileName" class="mb-1"></h2>
+        <p class="text-muted mb-3" id="profileLogin"></p>
+        <p id="profileBio" class="lead mb-4"></p>
+
+        <div class="profile-stats mb-4">
+            <span><i class="fas fa-users"></i> <span id="profileFollowers"></span> Followers</span>
+            <span><i class="fas fa-user-friends"></i> <span id="profileFollowing"></span> Following</span>
+            <span><i class="fas fa-book-open"></i> <span id="profilePublicRepos"></span> Public Repos</span>
+        </div>
+
+        <div class="profile-contact mb-3">
+            <p id="profileLocation"><i class="fas fa-map-marker-alt"></i> </p>
+            <p id="profileBlog"><i class="fas fa-link"></i> </p>
+            <p id="profileTwitter"><i class="fab fa-twitter"></i> </p>
+            <p id="profileCompany"><i class="fas fa-building"></i> </p>
+        </div>
+
+        <p class="text-muted"><small>Joined GitHub on: <span id="profileCreatedAt"></span></small></p>
+        <a id="profileGithubUrl" href="#" target="_blank" class="btn btn-primary mt-3">View on GitHub</a>
+    </div>
+
+    <div id="noUserMessage" class="alert alert-info text-center mt-5" role="alert">
+        Please enter a GitHub username in the <a href="{% url 'dashboard' %}" class="alert-link">Dashboard</a> to view profile data.
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorContainer = document.getElementById('errorContainer');
+        const profileData = document.getElementById('profileData');
+        const noUserMessage = document.getElementById('noUserMessage');
+
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const profileLogin = document.getElementById('profileLogin');
+        const profileBio = document.getElementById('profileBio');
+        const profileFollowers = document.getElementById('profileFollowers');
+        const profileFollowing = document.getElementById('profileFollowing');
+        const profilePublicRepos = document.getElementById('profilePublicRepos');
+        const profileLocation = document.getElementById('profileLocation');
+        const profileBlog = document.getElementById('profileBlog');
+        const profileTwitter = document.getElementById('profileTwitter');
+        const profileCompany = document.getElementById('profileCompany');
+        const profileCreatedAt = document.getElementById('profileCreatedAt');
+        const profileGithubUrl = document.getElementById('profileGithubUrl');
+
+        const username = localStorage.getItem('dashboardUsername'); // Get username from localStorage
+
+        if (!username) {
+            noUserMessage.style.display = 'block';
+            profileData.classList.add('d-none');
+            loadingSpinner.style.display = 'none';
+            return;
+        }
+
+        noUserMessage.style.display = 'none';
+        loadingSpinner.style.display = 'block';
+        errorContainer.style.display = 'none';
+        profileData.classList.add('d-none'); // Hide data until fetched
+
+        try {
+            const response = await fetch(`/api/get_profile/?username=${username}`);
+            const data = await response.json();
+
+            if (data.error) {
+                errorContainer.innerText = data.error;
+                errorContainer.style.display = 'block';
+            } else if (data.profile) {
+                const profile = data.profile;
+                profileAvatar.src = profile.avatar_url || 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png';
+                profileName.innerText = profile.name || profile.login;
+                profileLogin.innerText = `@${profile.login}`;
+                profileBio.innerText = profile.bio || 'No bio provided.';
+                profileFollowers.innerText = profile.followers;
+                profileFollowing.innerText = profile.following;
+                profilePublicRepos.innerText = profile.public_repos;
+                profileLocation.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${profile.location || 'Not specified'}`;
+                profileBlog.innerHTML = profile.blog ? `<i class="fas fa-link"></i> <a href="${profile.blog}" target="_blank">${profile.blog}</a>` : `<i class="fas fa-link"></i> Not specified`;
+                profileTwitter.innerHTML = profile.twitter_username ? `<i class="fab fa-twitter"></i> <a href="https://twitter.com/${profile.twitter_username}" target="_blank">@${profile.twitter_username}</a>` : `<i class="fab fa-twitter"></i> Not specified`;
+                profileCompany.innerHTML = profile.company ? `<i class="fas fa-building"></i> ${profile.company}` : `<i class="fas fa-building"></i> Not specified`;
+
+                const createdAtDate = new Date(profile.created_at);
+                profileCreatedAt.innerText = createdAtDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                profileGithubUrl.href = profile.html_url;
+
+                profileData.classList.remove('d-none'); // Show data
+            } else {
+                errorContainer.innerText = 'Could not retrieve profile data.';
+                errorContainer.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+            errorContainer.innerText = `An unexpected error occurred: ${error.message}. Please check your network connection or the GitHub API.`;
+            errorContainer.style.display = 'block';
+        } finally {
+            loadingSpinner.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

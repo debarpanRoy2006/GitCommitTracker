@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Custom styles for dashboard page */
+    .dashboard-container {
+        padding: 2rem 1.5rem;
+    }
+    .input-group-text {
+        background-color: #e9ecef;
+    }
+    .btn-github {
+        background-color: #24292e;
+        color: #fff;
+        border-color: #24292e;
+    }
+    .btn-github:hover {
+        background-color: #1a1e22;
+        border-color: #1a1e22;
+    }
+    .commit-card {
+        border-left: 5px solid #007bff;
+        margin-bottom: 1.5rem;
+    }
+    .commit-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .commit-files {
+        font-size: 0.85em;
+        color: #6c757d;
+    }
+    #loadingSpinner {
+        display: none;
+    }
+    .clear-inputs-btn {
+        background-color: #6c757d;
+        color: #fff;
+        border-color: #6c757d;
+    }
+    .clear-inputs-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container mt-4">
+    <h2 class="text-center mb-4">Repository Commit Tracker</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fab fa-github"></i></span>
+                <input type="text" id="usernameInput" class="form-control" placeholder="GitHub Username (e.g., torvalds)">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-book"></i></span>
+                <input type="text" id="repoInput" class="form-control" placeholder="Repository Name (e.g., linux)">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
+                <input type="text" id="branchInput" class="form-control" placeholder="Branch (default: main)">
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="sinceDateInput" class="form-label">From Date:</label>
+                    <input type="date" id="sinceDateInput" class="form-control mb-3">
+                </div>
+                <div class="col">
+                    <label for="untilDateInput" class="form-label">To Date:</label>
+                    <input type="date" id="untilDateInput" class="form-control mb-3">
+                </div>
+            </div>
+            <button id="getCommitsBtn" class="btn btn-primary w-100 mb-2">Get Commits</button>
+            <button id="clearInputsBtn" class="btn clear-inputs-btn w-100">Clear Inputs</button>
+        </div>
+    </div>
+
+    <div class="text-center mt-3" id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Fetching commits...</p>
+    </div>
+
+    <div id="commitsOutput" class="mt-4">
+        <p class="text-center text-muted">Enter a GitHub username and repository to see commits.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const usernameInput = document.getElementById('usernameInput');
+        const repoInput = document.getElementById('repoInput');
+        const branchInput = document.getElementById('branchInput');
+        const sinceDateInput = document.getElementById('sinceDateInput');
+        const untilDateInput = document.getElementById('untilDateInput');
+        const getCommitsBtn = document.getElementById('getCommitsBtn');
+        const clearInputsBtn = document.getElementById('clearInputsBtn');
+        const commitsOutput = document.getElementById('commitsOutput');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        const saveInputs = () => {
+            localStorage.setItem('dashboardUsername', usernameInput.value);
+            localStorage.setItem('dashboardRepo', repoInput.value);
+            localStorage.setItem('dashboardBranch', branchInput.value);
+            localStorage.setItem('dashboardSinceDate', sinceDateInput.value);
+            localStorage.setItem('dashboardUntilDate', untilDateInput.value);
+        };
+
+        const loadInputs = () => {
+            // Check URL parameters for pre-filling (e.g., from repositories.html)
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlUsername = urlParams.get('username');
+            const urlRepo = urlParams.get('repo');
+
+            if (urlUsername) {
+                usernameInput.value = urlUsername;
+                localStorage.setItem('dashboardUsername', urlUsername); // Also save to localStorage
+            } else {
+                usernameInput.value = localStorage.getItem('dashboardUsername') || '';
+            }
+
+            if (urlRepo) {
+                repoInput.value = urlRepo;
+                localStorage.setItem('dashboardRepo', urlRepo); // Also save to localStorage
+            } else {
+                repoInput.value = localStorage.getItem('dashboardRepo') || '';
+            }
+
+            branchInput.value = localStorage.getItem('dashboardBranch') || 'main'; // Default 'main' if not set
+            sinceDateInput.value = localStorage.getItem('dashboardSinceDate') || '';
+            untilDateInput.value = localStorage.getItem('dashboardUntilDate') || '';
+
+            // Automatically fetch commits if username and repo are present (from URL or localStorage)
+            if (usernameInput.value && repoInput.value) {
+                getCommitsBtn.click(); // Simulate click to fetch
+            }
+        };
+
+        const clearInputs = () => {
+            usernameInput.value = '';
+            repoInput.value = '';
+            branchInput.value = 'main';
+            sinceDateInput.value = '';
+            untilDateInput.value = '';
+            saveInputs(); // Save empty values to clear localStorage
+            commitsOutput.innerHTML = `<p class="text-center text-muted">Enter a GitHub username and repository to see commits.</p>`;
+        };
+
+        // Load inputs when the page loads
+        loadInputs();
+
+        // Save inputs whenever they change
+        usernameInput.addEventListener('input', saveInputs);
+        repoInput.addEventListener('input', saveInputs);
+        branchInput.addEventListener('input', saveInputs);
+        sinceDateInput.addEventListener('input', saveInputs);
+        untilDateInput.addEventListener('input', saveInputs);
+
+        // Event listener for the new Clear Inputs button
+        clearInputsBtn.addEventListener('click', clearInputs);
+
+
+        getCommitsBtn.addEventListener('click', async () => {
+            const username = usernameInput.value.trim();
+            const repo = repoInput.value.trim();
+            const branch = branchInput.value.trim() || 'main'; // Default to 'main'
+            const since = sinceDateInput.value;
+            const until = untilDateInput.value;
+
+            if (!username || !repo) {
+                alert('Please enter both GitHub Username and Repository Name.');
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+            commitsOutput.innerHTML = ''; // Clear previous results
+
+            const queryParams = new URLSearchParams({ username, repo, branch });
+            if (since) queryParams.append('since', since);
+            if (until) queryParams.append('until', until);
+
+            try {
+                const response = await fetch(`/api/get_commits/?${queryParams.toString()}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    commitsOutput.innerHTML = `<div class="alert alert-danger" role="alert">${data.error}</div>`;
+                } else if (data.commits && data.commits.length > 0) {
+                    let commitsHtml = '<div class="row">';
+                    data.commits.forEach(commit => {
+                        commitsHtml += `
+                            <div class="col-md-6">
+                                <div class="card commit-card shadow-sm mb-3">
+                                    <div class="card-body d-flex align-items-start">
+                                        <img src="${commit.avatar_url}" alt="Author Avatar" class="commit-avatar">
+                                        <div>
+                                            <h5 class="card-title mb-1">${commit.message}</h5>
+                                            <h6 class="card-subtitle text-muted mb-2">
+                                                <i class="fas fa-user"></i> ${commit.author} on <i class="fas fa-calendar-alt"></i> ${commit.date}
+                                            </h6>
+                                            <p class="card-text"><a href="${commit.html_url}" target="_blank" rel="noopener">View Commit on GitHub <i class="fas fa-external-link-alt"></i></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    commitsHtml += '</div>';
+                    commitsOutput.innerHTML = commitsHtml;
+                } else {
+                    commitsOutput.innerHTML = `<div class="alert alert-info" role="alert">No commits found for the given criteria.</div>`;
+                }
+            } catch (error) {
+                console.error('Error fetching commits:', error);
+                commitsOutput.innerHTML = `<div class="alert alert-danger" role="alert">An unexpected error occurred: ${error.message}</div>`;
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

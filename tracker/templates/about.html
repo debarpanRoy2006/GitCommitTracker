@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}About - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    .about-card {
+        transition: transform 0.2s ease-in-out;
+        border: none;
+    }
+    .about-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+    }
+    .about-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+    }
+    .tech-logo {
+        height: 24px;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+    .about-card ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    .about-card ul li {
+        margin-bottom: 8px;
+        font-size: 1.05em;
+    }
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+    .fade-in-delay-1 { animation-delay: 0.2s; }
+    .fade-in-delay-2 { animation-delay: 0.4s; }
+    .fade-in-delay-3 { animation-delay: 0.6s; }
+    .fade-in-delay-4 { animation-delay: 0.8s; }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    body.bg-dark .about-card {
+        background-color: #495057 !important;
+        color: #f8f9fa !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    }
+    body.bg-dark .card-title {
+        color: #f8f9fa !important;
+    }
+    body.bg-dark .card-text, body.bg-dark .about-card ul li {
+        color: #ced4da !important;
+    }
+    body.bg-dark .about-card a {
+        color: #20c997; /* A contrasting color for dark mode links */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h2 class="mb-5 fade-in">About gitTracker</h2>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6 col-lg-4 fade-in fade-in-delay-1">
+        <div class="card h-100 shadow-sm about-card">
+          <div class="card-body">
+            <i class="fas fa-bullseye text-primary about-icon mb-3"></i>
+            <h5 class="card-title">Our Mission</h5>
+            <p class="card-text">
+              At gitTracker, our mission is to provide developers, project managers, and tech enthusiasts with a simple, intuitive, and efficient way to monitor and understand the development progress of any public GitHub repository. We aim to cut through the complexity, offering clear insights into commit activities and project contributions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-in fade-in-delay-2">
+        <div class="card h-100 shadow-sm about-card">
+          <div class="card-body">
+            <i class="fas fa-lightbulb text-success about-icon mb-3"></i>
+            <h5 class="card-title">Key Features</h5>
+            <p class="card-text">
+              gitTracker allows you to:
+            </p>
+            <ul class="text-start">
+              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Track Commits:</strong> View detailed commit history for any public GitHub repository.</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Explore Profiles:</strong> Get a quick overview of any public GitHub user's profile.</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Browse Repositories:</strong> Easily find and list public repositories for any GitHub user.</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Customize Experience:</strong> Personalize your viewing experience with theme settings.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-in fade-in-delay-3">
+        <div class="card h-100 shadow-sm about-card">
+          <div class="card-body">
+            <i class="fas fa-code text-danger about-icon mb-3"></i>
+            <h5 class="card-title">Technologies Used</h5>
+            <p>
+              This project leverages the <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener">GitHub REST API</a>
+              to retrieve data. It's built using:
+            </p>
+            <ul class="text-start">
+              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django Logo" class="tech-logo"><strong>Django:</strong> Backend web framework for robust data handling.</li>
+              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap Logo" class="tech-logo"><strong>Bootstrap:</strong> Responsive UI framework for a modern look.</li>
+              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript Logo" class="tech-logo"><strong>JavaScript:</strong> Client-side interactivity for a dynamic user experience.</li>
+              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-plain.svg" alt="HTML5 Logo" class="tech-logo"><strong>HTML5 & CSS3:</strong> For structuring and styling the web pages.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-in fade-in-delay-4">
+        <div class="card h-100 shadow-sm about-card">
+          <div class="card-body">
+            <i class="fas fa-exclamation-triangle text-warning about-icon mb-3"></i>
+            <h5 class="card-title">Important Disclaimer</h5>
+            <p class="card-text">
+              gitTracker uses the GitHub API for data retrieval. Please be aware that public API requests have rate limits. Heavy usage may temporarily restrict access to GitHub data from this application due to these limits.
+            </p>
+            <p class="card-text mt-3">
+              This project is intended for educational purposes and as a demonstration of web development concepts. It is not affiliated with GitHub Inc.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+{% endblock %}

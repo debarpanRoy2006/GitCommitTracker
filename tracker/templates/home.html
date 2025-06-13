@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - GitHub Commit Tracker{% endblock %}
+
+{% block extra_head %}
+<style>
+    .hero-section {
+        background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80') center center/cover no-repeat;
+        color: #fff;
+        padding: 80px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .hero-section p {
+        font-size: 1.25rem;
+        margin-bottom: 40px;
+    }
+    .card-icon {
+        font-size: 3rem; /* Larger icons for cards */
+        margin-bottom: 15px;
+    }
+    .home-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border: none; /* Remove default card border */
+    }
+    .home-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
+    }
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+    .fade-in-delay-1 { animation-delay: 0.2s; }
+    .fade-in-delay-2 { animation-delay: 0.4s; }
+    .fade-in-delay-3 { animation-delay: 0.6s; }
+    /* Add more delay classes if needed for more cards */
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    body.bg-dark .hero-section {
+        background-blend-mode: multiply;
+        background-color: rgba(0, 0, 0, 0.5); /* Darker overlay for dark mode */
+    }
+    body.bg-dark .home-card {
+        background-color: #495057 !important; /* Darker card background */
+        color: #f8f9fa !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    }
+    body.bg-dark .card-title {
+        color: #f8f9fa !important;
+    }
+    body.bg-dark .card-text {
+        color: #ced4da !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fade-in">Welcome to gitTracker!</h1>
+            <p class="lead fade-in fade-in-delay-1">Your comprehensive tool to explore GitHub repositories and commits with ease.</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg fade-in fade-in-delay-2">Get Started</a>
+        </div>
+    </section>
+
+    <section class="features-section py-5">
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-3">
+                <div class="card h-100 text-center home-card shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-chart-line card-icon text-primary mb-3"></i>
+                        <h5 class="card-title">Dashboard</h5>
+                        <p class="card-text">View commit history for specific repositories.</p>
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-4">
+                <div class="card h-100 text-center home-card shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-user-circle card-icon text-success mb-3"></i>
+                        <h5 class="card-title">Profile</h5>
+                        <p class="card-text">View public GitHub profile information.</p>
+                        <a href="{% url 'profile' %}" class="btn btn-success">View Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-5">
+                <div class="card h-100 text-center home-card shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-code-branch card-icon text-info mb-3"></i>
+                        <h5 class="card-title">Repositories</h5>
+                        <p class="card-text">Explore and inspect GitHub repositories easily.</p>
+                        <a href="{% url 'repositories' %}" class="btn btn-info">Browse Repos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-6">
+                <div class="card h-100 text-center home-card shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-cog card-icon text-secondary mb-3"></i>
+                        <h5 class="card-title">Settings</h5>
+                        <p class="card-text">Customize your application preferences.</p>
+                        <a href="{% url 'settings' %}" class="btn btn-secondary">Go to Settings</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-7">
+                <div class="card h-100 text-center home-card shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-info-circle card-icon text-warning mb-3"></i>
+                        <h5 class="card-title">About</h5>
+                        <p class="card-text">Learn more about gitTracker and its features.</p>
+                        <a href="{% url 'about' %}" class="btn btn-warning">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-8">
+                <div class="card h-100 text-center home-card shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-question-circle card-icon text-danger mb-3"></i>
+                        <h5 class="card-title">Help</h5>
+                        <p class="card-text">Find answers to common questions and get support.</p>
+                        <a href="{% url 'help' %}" class="btn btn-danger">Get Help</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
