@@ -4,92 +4,147 @@
 
 {% block extra_head %}
 <style>
-    /* Custom styles for dashboard page */
     .dashboard-container {
         padding: 2rem 1.5rem;
     }
+
+    .dashboard-card {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
     .input-group-text {
         background-color: #e9ecef;
     }
+
     .btn-github {
         background-color: #24292e;
         color: #fff;
         border-color: #24292e;
     }
+
     .btn-github:hover {
         background-color: #1a1e22;
-        border-color: #1a1e22;
     }
+
     .commit-card {
         border-left: 5px solid #007bff;
         margin-bottom: 1.5rem;
     }
+
     .commit-avatar {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         margin-right: 10px;
     }
+
     .commit-files {
         font-size: 0.85em;
         color: #6c757d;
     }
-    #loadingSpinner {
-        display: none;
-    }
+
     .clear-inputs-btn {
         background-color: #6c757d;
         color: #fff;
         border-color: #6c757d;
     }
+
     .clear-inputs-btn:hover {
         background-color: #5a6268;
-        border-color: #545b62;
+    }
+
+    #loadingSpinner {
+        display: none;
+    }
+
+    /* Dark mode */
+    body.bg-dark .dashboard-card {
+        background-color: #2c2f36;
+        color: #f8f9fa;
+    }
+
+    body.bg-dark .input-group-text {
+        background-color: #495057;
+        color: #f8f9fa;
+    }
+
+    body.bg-dark .form-control {
+        background-color: #212529;
+        color: #f8f9fa;
+        border-color: #495057;
+    }
+
+    body.bg-dark .form-control::placeholder {
+        color: #adb5bd;
+    }
+
+    body.bg-dark .form-label {
+        color: #ced4da;
+    }
+
+    body.bg-dark .commit-card {
+        background-color: #343a40;
+        border-left-color: #20c997;
+    }
+
+    body.bg-dark .card-title,
+    body.bg-dark .card-subtitle,
+    body.bg-dark .card-text {
+        color: #f8f9fa !important;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container dashboard-container mt-4">
-    <h2 class="text-center mb-4">Repository Commit Tracker</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <h2 class="text-center mb-4">GitHub Commit Tracker</h2>
 
-    <div class="row mb-4">
-        <div class="col-md-6 offset-md-3">
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="fab fa-github"></i></span>
-                <input type="text" id="usernameInput" class="form-control" placeholder="GitHub Username (e.g., torvalds)">
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="fas fa-book"></i></span>
-                <input type="text" id="repoInput" class="form-control" placeholder="Repository Name (e.g., linux)">
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
-                <input type="text" id="branchInput" class="form-control" placeholder="Branch (default: main)">
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label for="sinceDateInput" class="form-label">From Date:</label>
-                    <input type="date" id="sinceDateInput" class="form-control mb-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fab fa-github"></i></span>
+                    <input type="text" id="usernameInput" class="form-control" placeholder="GitHub Username (e.g., torvalds)">
                 </div>
-                <div class="col">
-                    <label for="untilDateInput" class="form-label">To Date:</label>
-                    <input type="date" id="untilDateInput" class="form-control mb-3">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-book"></i></span>
+                    <input type="text" id="repoInput" class="form-control" placeholder="Repository Name (e.g., linux)">
                 </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
+                    <input type="text" id="branchInput" class="form-control" placeholder="Branch (default: main)">
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="sinceDateInput" class="form-label">From Date:</label>
+                        <input type="date" id="sinceDateInput" class="form-control mb-3">
+                    </div>
+                    <div class="col">
+                        <label for="untilDateInput" class="form-label">To Date:</label>
+                        <input type="date" id="untilDateInput" class="form-control mb-3">
+                    </div>
+                </div>
+
+                <button id="getCommitsBtn" class="btn btn-primary w-100 mb-2">
+                    Get Commits
+                </button>
+                <button id="clearInputsBtn" class="btn clear-inputs-btn w-100">Clear Inputs</button>
             </div>
-            <button id="getCommitsBtn" class="btn btn-primary w-100 mb-2">Get Commits</button>
-            <button id="clearInputsBtn" class="btn clear-inputs-btn w-100">Clear Inputs</button>
         </div>
     </div>
 
-    <div class="text-center mt-3" id="loadingSpinner">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+    <div class="text-center mt-4" id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status"></div>
         <p class="mt-2">Fetching commits...</p>
     </div>
 
-    <div id="commitsOutput" class="mt-4">
+    <div id="commitsOutput" class="mt-5">
         <p class="text-center text-muted">Enter a GitHub username and repository to see commits.</p>
     </div>
 </div>
@@ -117,32 +172,30 @@
         };
 
         const loadInputs = () => {
-            // Check URL parameters for pre-filling (e.g., from repositories.html)
             const urlParams = new URLSearchParams(window.location.search);
             const urlUsername = urlParams.get('username');
             const urlRepo = urlParams.get('repo');
 
             if (urlUsername) {
                 usernameInput.value = urlUsername;
-                localStorage.setItem('dashboardUsername', urlUsername); // Also save to localStorage
+                localStorage.setItem('dashboardUsername', urlUsername);
             } else {
                 usernameInput.value = localStorage.getItem('dashboardUsername') || '';
             }
 
             if (urlRepo) {
                 repoInput.value = urlRepo;
-                localStorage.setItem('dashboardRepo', urlRepo); // Also save to localStorage
+                localStorage.setItem('dashboardRepo', urlRepo);
             } else {
                 repoInput.value = localStorage.getItem('dashboardRepo') || '';
             }
 
-            branchInput.value = localStorage.getItem('dashboardBranch') || 'main'; // Default 'main' if not set
+            branchInput.value = localStorage.getItem('dashboardBranch') || 'main';
             sinceDateInput.value = localStorage.getItem('dashboardSinceDate') || '';
             untilDateInput.value = localStorage.getItem('dashboardUntilDate') || '';
 
-            // Automatically fetch commits if username and repo are present (from URL or localStorage)
             if (usernameInput.value && repoInput.value) {
-                getCommitsBtn.click(); // Simulate click to fetch
+                getCommitsBtn.click();
             }
         };
 
@@ -152,28 +205,22 @@
             branchInput.value = 'main';
             sinceDateInput.value = '';
             untilDateInput.value = '';
-            saveInputs(); // Save empty values to clear localStorage
+            saveInputs();
             commitsOutput.innerHTML = `<p class="text-center text-muted">Enter a GitHub username and repository to see commits.</p>`;
         };
 
-        // Load inputs when the page loads
         loadInputs();
 
-        // Save inputs whenever they change
-        usernameInput.addEventListener('input', saveInputs);
-        repoInput.addEventListener('input', saveInputs);
-        branchInput.addEventListener('input', saveInputs);
-        sinceDateInput.addEventListener('input', saveInputs);
-        untilDateInput.addEventListener('input', saveInputs);
+        [usernameInput, repoInput, branchInput, sinceDateInput, untilDateInput].forEach(input => {
+            input.addEventListener('input', saveInputs);
+        });
 
-        // Event listener for the new Clear Inputs button
         clearInputsBtn.addEventListener('click', clearInputs);
-
 
         getCommitsBtn.addEventListener('click', async () => {
             const username = usernameInput.value.trim();
             const repo = repoInput.value.trim();
-            const branch = branchInput.value.trim() || 'main'; // Default to 'main'
+            const branch = branchInput.value.trim() || 'main';
             const since = sinceDateInput.value;
             const until = untilDateInput.value;
 
@@ -183,7 +230,7 @@
             }
 
             loadingSpinner.style.display = 'block';
-            commitsOutput.innerHTML = ''; // Clear previous results
+            commitsOutput.innerHTML = '';
 
             const queryParams = new URLSearchParams({ username, repo, branch });
             if (since) queryParams.append('since', since);
@@ -200,7 +247,7 @@
                     data.commits.forEach(commit => {
                         commitsHtml += `
                             <div class="col-md-6">
-                                <div class="card commit-card shadow-sm mb-3">
+                                <div class="card commit-card shadow-sm">
                                     <div class="card-body d-flex align-items-start">
                                         <img src="${commit.avatar_url}" alt="Author Avatar" class="commit-avatar">
                                         <div>
@@ -208,7 +255,11 @@
                                             <h6 class="card-subtitle text-muted mb-2">
                                                 <i class="fas fa-user"></i> ${commit.author} on <i class="fas fa-calendar-alt"></i> ${commit.date}
                                             </h6>
-                                            <p class="card-text"><a href="${commit.html_url}" target="_blank" rel="noopener">View Commit on GitHub <i class="fas fa-external-link-alt"></i></a></p>
+                                            <p class="card-text">
+                                                <a href="${commit.html_url}" target="_blank" rel="noopener">
+                                                    View Commit on GitHub <i class="fas fa-external-link-alt"></i>
+                                                </a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

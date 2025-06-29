@@ -3,146 +3,427 @@
 {% block title %}Home - GitHub Commit Tracker{% endblock %}
 
 {% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+{%load static%}
 <style>
-    .hero-section {
-        background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80') center center/cover no-repeat;
-        color: #fff;
-        padding: 80px 0;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        margin-bottom: 30px;
-    }
-    .hero-section h1 {
-        font-size: 3.5rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-    .hero-section p {
-        font-size: 1.25rem;
-        margin-bottom: 40px;
-    }
-    .card-icon {
-        font-size: 3rem; /* Larger icons for cards */
-        margin-bottom: 15px;
-    }
-    .home-card {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        border: none; /* Remove default card border */
-    }
-    .home-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
-    }
-    .fade-in {
-        opacity: 0;
-        animation: fadeIn 1s forwards;
-    }
-    .fade-in-delay-1 { animation-delay: 0.2s; }
-    .fade-in-delay-2 { animation-delay: 0.4s; }
-    .fade-in-delay-3 { animation-delay: 0.6s; }
-    /* Add more delay classes if needed for more cards */
+  /* Hero Section */
+  .hero-section {
+      background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80') center center/cover no-repeat;
+      padding: 100px 0;
+      position: relative;
+      border-radius: 1rem;
+      margin-bottom: 60px;
+      color: white;
+  }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+  .hero-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 0;
+      border-radius: 1rem;
+  }
 
-    body.bg-dark .hero-section {
-        background-blend-mode: multiply;
-        background-color: rgba(0, 0, 0, 0.5); /* Darker overlay for dark mode */
-    }
-    body.bg-dark .home-card {
-        background-color: #495057 !important; /* Darker card background */
-        color: #f8f9fa !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-    }
-    body.bg-dark .card-title {
-        color: #f8f9fa !important;
-    }
-    body.bg-dark .card-text {
-        color: #ced4da !important;
-    }
+  .hero-section .container {
+      position: relative;
+      z-index: 1;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-section h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+  }
+
+  .hero-section p.lead {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+  }
+
+  /* Specific styling for the typing cursor */
+  #cursor {
+      display: inline-block; /* Essential for the blinking effect to be visible */
+      background-color: white; /* Make the cursor a visible block */
+      width: 3px; /* Width of the cursor */
+      height: 1.5em; /* Height relative to font size */
+      vertical-align: middle; /* Align with text */
+      margin-left: 5px; /* Space from text */
+      animation: blink-caret .75s infinite; /* Blinking animation */
+  }
+
+  body.bg-dark #cursor {
+      background-color: #20c997; /* Teal color for cursor in dark mode */
+  }
+
+  /* Keyframes for the blinking cursor */
+  @keyframes blink-caret {
+    from, to { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+
+  .card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+  }
+
+  /* Dark mode for hero section */
+  body.bg-dark .hero-section::before {
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay in dark mode */
+  }
+
+  /* Dark mode for cards in home.html */
+  body.bg-dark .card {
+    background-color: #343a40; /* Darker background for cards */
+    color: #f8f9fa; /* Light text */
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3) !important;
+  }
+  body.bg-dark .card .card-title,
+  body.bg-dark .card .card-text {
+    color: #f8f9fa !important;
+  }
+  body.bg-dark .card .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  body.bg-dark .card .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  body.bg-dark .card .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  body.bg-dark .card .btn-success:hover {
+    background-color: #1e7e34;
+    border-color: #1e7e34;
+  }
+  body.bg-dark .card .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+  body.bg-dark .card .btn-info:hover {
+    background-color: #117a8b;
+    border-color: #117a8b;
+  }
+  body.bg-dark .card .btn-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+    color: #f8f9fa;
+  }
+  body.bg-dark .card .btn-dark:hover {
+    background-color: #23272b;
+    border-color: #1d2124;
+  }
+  body.bg-dark .card .btn-outline-dark {
+    color: #f8f9fa;
+    border-color: #f8f9fa;
+  }
+  body.bg-dark .card .btn-outline-dark:hover {
+    background-color: #f8f9fa;
+    color: #212529;
+  }
+/* Modern Section Cards Like CodeWithHarry */
+.realworld-section .card {
+  border: none;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.realworld-section .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.realworld-section .card-img-top {
+  height: 220px;
+  object-fit: cover;
+}
+
+.realworld-section h2 {
+  font-size: 2.2rem;
+}
+
+.realworld-section .card-title {
+  font-weight: 600;
+}
+
+body.bg-dark .realworld-section .card {
+  background-color: #2c2f36;
+  color: #f8f9fa;
+}
+
+body.bg-dark .realworld-section .card .card-text {
+  color: #adb5bd;
+}
+.realworld-section .card-img-top {
+  height: 220px;
+  object-fit: cover;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.realworld-section h2 {
+  font-size: 2.2rem;
+}
+body.bg-dark .realworld-section .text-muted {
+  color: #ced4da !important;
+}
+body.bg-dark .realworld-section .card {
+  background-color: #2c2f36;
+  color: #f8f9fa;
+}
+body.bg-dark .realworld-section .card .card-title,
+body.bg-dark .realworld-section .card .card-text {
+  color: #f8f9fa !important;
+}
+
+.bg-extended-wrapper {
+  background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80') center center/cover no-repeat;
+  color: white;
+}
+
+.bg-extended-wrapper .realworld-section {
+  padding-top: 3rem;
+  padding-bottom: 5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.bg-extended-wrapper .realworld-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* dark overlay for readability */
+  z-index: -1;
+}
+
+.bg-extended-wrapper .card {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  color: #f8f9fa;
+  border: none;
+}
+
+.bg-extended-wrapper .card .card-text {
+  color: #dee2e6;
+}
+#tracker-bg {
+  background: url("{% static 'images/gith.jpg' %}") center center/cover no-repeat;
+}
+
+body.bg-dark .carousel-control-prev-icon,
+body.bg-dark .carousel-control-next-icon {
+  filter: invert(1);
+}
+.fade-in {
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fw-bold {
+    font-weight: 600 !important;
+}
+body.bg-dark .fw-bold {
+    color: #f8f9fa !important;
+}
+/* Light background by default */
+.feature-section {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+/* Text and icon color override for dark mode */
+body.bg-dark .feature-section {
+  background-color: #212529;
+  color: #f8f9fa;
+}
+
+body.bg-dark .feature-section .feature-text {
+  color: #ced4da !important;
+}
+
+body.bg-dark .feature-section .feature-title {
+  color: #f8f9fa !important;
+}
+.feature-section {
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container text-center">
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="display-4 fade-in">Welcome to gitTracker!</h1>
-            <p class="lead fade-in fade-in-delay-1">Your comprehensive tool to explore GitHub repositories and commits with ease.</p>
-            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg fade-in fade-in-delay-2">Get Started</a>
+<div class="container text-center position-relative fade-in">
+<div class="container-fluid p-0">
+  <section class="hero-section text-white text-center d-flex align-items-center">
+    <div class="container py-5">
+      <h1 class="display-3 fw-bold mb-3">Track Your GitHub Commits</h1>
+      <p class="lead mb-4" id="tagline">
+        <span id="cursor"></span>
+      </p>
+      <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Get Started</a>
+    </div>
+  </section>
+
+
+
+<section class="realworld-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Code Smarter with Real-World Practice</h2>
+      <p class="lead text-muted">
+        At gitTracker, you don't just track commits — you analyze, improve, and level up through hands-on contribution insights.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow">
+          <img src="{% static 'images/git.jpg' %}" class="card-img-top" alt="Understand GitHub">
+          <div class="card-body">
+            <h5 class="card-title">Understand GitHub</h5>
+            <p class="card-text">Learn how GitHub works — commits, branches, contribution charts, and more.</p>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <section class="features-section py-5">
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-3">
-                <div class="card h-100 text-center home-card shadow-sm">
-                    <div class="card-body">
-                        <i class="fas fa-chart-line card-icon text-primary mb-3"></i>
-                        <h5 class="card-title">Dashboard</h5>
-                        <p class="card-text">View commit history for specific repositories.</p>
-                        <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-4">
-                <div class="card h-100 text-center home-card shadow-sm">
-                    <div class="card-body">
-                        <i class="fas fa-user-circle card-icon text-success mb-3"></i>
-                        <h5 class="card-title">Profile</h5>
-                        <p class="card-text">View public GitHub profile information.</p>
-                        <a href="{% url 'profile' %}" class="btn btn-success">View Profile</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-5">
-                <div class="card h-100 text-center home-card shadow-sm">
-                    <div class="card-body">
-                        <i class="fas fa-code-branch card-icon text-info mb-3"></i>
-                        <h5 class="card-title">Repositories</h5>
-                        <p class="card-text">Explore and inspect GitHub repositories easily.</p>
-                        <a href="{% url 'repositories' %}" class="btn btn-info">Browse Repos</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-6">
-                <div class="card h-100 text-center home-card shadow-sm">
-                    <div class="card-body">
-                        <i class="fas fa-cog card-icon text-secondary mb-3"></i>
-                        <h5 class="card-title">Settings</h5>
-                        <p class="card-text">Customize your application preferences.</p>
-                        <a href="{% url 'settings' %}" class="btn btn-secondary">Go to Settings</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-7">
-                <div class="card h-100 text-center home-card shadow-sm">
-                    <div class="card-body">
-                        <i class="fas fa-info-circle card-icon text-warning mb-3"></i>
-                        <h5 class="card-title">About</h5>
-                        <p class="card-text">Learn more about gitTracker and its features.</p>
-                        <a href="{% url 'about' %}" class="btn btn-warning">Learn More</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 fade-in fade-in-delay-8">
-                <div class="card h-100 text-center home-card shadow-sm">
-                    <div class="card-body">
-                        <i class="fas fa-question-circle card-icon text-danger mb-3"></i>
-                        <h5 class="card-title">Help</h5>
-                        <p class="card-text">Find answers to common questions and get support.</p>
-                        <a href="{% url 'help' %}" class="btn btn-danger">Get Help</a>
-                    </div>
-                </div>
-            </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow">
+          <img src="{% static 'images/track.jpg' %}" class="card-img-top" alt="Track Projects">
+          <div class="card-body">
+            <h5 class="card-title">Track Real Projects</h5>
+            <p class="card-text">Visualize commit activity and get insights from real open-source repositories.</p>
+          </div>
         </div>
-    </section>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow">
+          <img src="{% static 'images/practice.jpg' %}" class="card-img-top" alt="Practice Coding">
+          <div class="card-body">
+            <h5 class="card-title">Practice with Purpose</h5>
+            <p class="card-text">Sharpen your skills through commit-based learning — like how real developers grow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="py-5 feature-section">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <i class="bi bi-graph-up card-icon text-primary"></i>
+        <h5 class="fw-bold feature-title">Live Stats</h5>
+        <p class="feature-text">See your latest commits, contribution streaks, and trends.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-person-check card-icon text-success"></i>
+        <h5 class="fw-bold feature-title">No Login Needed</h5>
+        <p class="feature-text">Just enter a username and start exploring instantly.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-clock-history card-icon text-danger"></i>
+        <h5 class="fw-bold feature-title">Track History</h5>
+        <p class="feature-text">Follow your progress across weeks, months, and projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="tracker-bg" class="bg-dark text-white py-5 position-relative">
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6); z-index: 0;"></div>
+
+  <div class="container text-center position-relative" style="z-index: 1;">
+    <h3>Why GitHub Commit Tracker?</h3>
+    <p class="lead mt-3">
+      GitHub Commit Tracker is designed for developers, students, and mentors who want a simple, efficient way to view real coding activity. Whether you're tracking your own progress, preparing for job applications, or reviewing a student's work, this tool offers clean commit history, profile insights, and repository stats—all fetched live from GitHub. It's a focused, no-frills companion for anyone who values code transparency and consistent growth.
+    </p>
+  </div>
+</section>
+
+
 </div>
+
+
+
+
+{% endblock %}
+
+{% block extra_body_scripts %}
+<script>
+  const messages = [
+    "Track GitHub commits instantly.",
+    "Visualize repository progress.",
+    "Your all-in-one GitHub tracking companion."
+  ];
+
+  const tagline = document.getElementById("tagline");
+  const cursor = document.getElementById("cursor");
+
+  let msgIndex = 0;
+  let charIndex = 0;
+  const typingSpeed = 50;
+  const erasingSpeed = 30;
+  const pauseBetween = 1800;
+
+  function type() {
+    if (tagline && charIndex < messages[msgIndex].length) {
+      tagline.textContent += messages[msgIndex].charAt(charIndex);
+      charIndex++;
+      setTimeout(type, typingSpeed);
+    } else if (tagline) {
+      setTimeout(erase, pauseBetween);
+    }
+  }
+
+  function erase() {
+    if (tagline && charIndex > 0) {
+      tagline.textContent = messages[msgIndex].substring(0, charIndex - 1);
+      charIndex--;
+      setTimeout(erase, erasingSpeed);
+    } else if (tagline) {
+      msgIndex = (msgIndex + 1) % messages.length;
+      setTimeout(type, 500); // Pause before typing next message
+    }
+  }
+
+  // Initial call to start the animation
+  document.addEventListener("DOMContentLoaded", () => {
+    if (tagline && cursor) { // Ensure elements exist
+      setTimeout(type, 1000); // Start typing after a brief delay
+    }
+  });
+
+  // Cursor blinking
+  setInterval(() => {
+    if (cursor) {
+      cursor.style.opacity = (cursor.style.opacity === '0' ? '1' : '0');
+    }
+  }, 500);
+</script>
 {% endblock %}

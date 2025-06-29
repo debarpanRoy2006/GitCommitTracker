@@ -2,8 +2,10 @@ import requests
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
-# from django.contrib.auth import login as auth_login, logout as auth_logout # No longer needed for this model
-# from django.contrib.auth.models import User # No longer directly managing Django Users for GitHub data
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 # --- Views for serving HTML pages ---
 

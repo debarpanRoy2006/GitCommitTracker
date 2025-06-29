@@ -1,134 +1,194 @@
 {% extends 'base.html' %}
 
-{% block title %}About - GitHub Commit Tracker{% endblock %}
+{% block title %}About - gitTracker{% endblock %}
 
 {% block extra_head %}
 <style>
+.about-section {
+    background: url('https://raw.githubusercontent.com/akzhy/Vanta-Demos/master/static/github-background.svg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    z-index: 1;
+}
+
+
+  .about-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.92); /* Light mode overlay */
+    z-index: -1;
+}
+
+body.bg-dark .about-section::before {
+    background-color: rgba(0, 0, 0, 0.85); /* Fix: deep black overlay */
+}
+body.bg-dark .about-section,
+body.bg-dark .about-section h1,
+body.bg-dark .about-section h2,
+body.bg-dark .about-section h3,
+body.bg-dark .about-section h4,
+body.bg-dark .about-section h5,
+body.bg-dark .about-section h6,
+body.bg-dark .about-section p,
+body.bg-dark .about-section li,
+body.bg-dark .about-section .card-title,
+body.bg-dark .about-section .card-text {
+    color: #f8f9fa !important;
+}
+
+
+body.bg-dark .about-section a {
+    color: #66d9ef !important;
+}
+
     .about-card {
-        transition: transform 0.2s ease-in-out;
+        transition: all 0.3s ease;
         border: none;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        background: linear-gradient(145deg, #fdfdfd, #f3f3f3);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
+
     .about-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
     }
+
     .about-icon {
-        font-size: 3.5rem;
-        margin-bottom: 20px;
+        font-size: 3.4rem;
+        margin-bottom: 15px;
+        transition: transform 0.3s ease;
     }
+
+    .about-card:hover .about-icon {
+        transform: scale(1.1);
+    }
+
     .tech-logo {
-        height: 24px;
+        height: 22px;
         margin-right: 8px;
         vertical-align: middle;
     }
-    .about-card ul {
-        list-style: none;
-        padding-left: 0;
-    }
-    .about-card ul li {
-        margin-bottom: 8px;
-        font-size: 1.05em;
-    }
+
     .fade-in {
         opacity: 0;
-        animation: fadeIn 1s forwards;
+        animation: fadeIn 0.9s ease forwards;
     }
+
     .fade-in-delay-1 { animation-delay: 0.2s; }
     .fade-in-delay-2 { animation-delay: 0.4s; }
     .fade-in-delay-3 { animation-delay: 0.6s; }
     .fade-in-delay-4 { animation-delay: 0.8s; }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(25px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
     body.bg-dark .about-card {
-        background-color: #495057 !important;
+        background: linear-gradient(145deg, #343a40, #495057) !important;
         color: #f8f9fa !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3) !important;
     }
-    body.bg-dark .card-title {
-        color: #f8f9fa !important;
+
+    body.bg-dark .card-title,
+    body.bg-dark .card-text,
+    body.bg-dark .about-card ul li {
+        color: #f1f3f5 !important;
     }
-    body.bg-dark .card-text, body.bg-dark .about-card ul li {
-        color: #ced4da !important;
-    }
+
     body.bg-dark .about-card a {
-        color: #20c997; /* A contrasting color for dark mode links */
+        color: #66d9ef;
+    }
+
+    .section-heading {
+        font-weight: 600;
+        font-size: 1.75rem;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container text-center py-5">
-    <h2 class="mb-5 fade-in">About gitTracker</h2>
+<div class="about-section">
+  <div class="container text-center">
 
+    <!-- Heading -->
+    <h2 class="mb-4 fade-in display-5 fw-bold text-dark">
+      Know the Story Behind <span class="text-primary">gitTracker</span>
+    </h2>
+    <p class="mb-5 text-muted fade-in fade-in-delay-1">
+      Not just commits. Context, clarity, and contribution — simplified.
+    </p>
+
+    <!-- Cards -->
     <div class="row g-4 justify-content-center">
-      <div class="col-md-6 col-lg-4 fade-in fade-in-delay-1">
-        <div class="card h-100 shadow-sm about-card">
-          <div class="card-body">
-            <i class="fas fa-bullseye text-primary about-icon mb-3"></i>
-            <h5 class="card-title">Our Mission</h5>
-            <p class="card-text">
-              At gitTracker, our mission is to provide developers, project managers, and tech enthusiasts with a simple, intuitive, and efficient way to monitor and understand the development progress of any public GitHub repository. We aim to cut through the complexity, offering clear insights into commit activities and project contributions.
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div class="col-md-6 col-lg-4 fade-in fade-in-delay-2">
-        <div class="card h-100 shadow-sm about-card">
+        <div class="about-card shadow-sm">
           <div class="card-body">
-            <i class="fas fa-lightbulb text-success about-icon mb-3"></i>
-            <h5 class="card-title">Key Features</h5>
-            <p class="card-text">
-              gitTracker allows you to:
-            </p>
-            <ul class="text-start">
-              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Track Commits:</strong> View detailed commit history for any public GitHub repository.</li>
-              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Explore Profiles:</strong> Get a quick overview of any public GitHub user's profile.</li>
-              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Browse Repositories:</strong> Easily find and list public repositories for any GitHub user.</li>
-              <li><i class="fas fa-check-circle text-success me-2"></i><strong>Customize Experience:</strong> Personalize your viewing experience with theme settings.</li>
-            </ul>
+            <i class="fas fa-eye text-info about-icon"></i>
+            <h5 class="card-title">Clean GitHub Visuals</h5>
+            <p class="card-text">See contributions, repos, and user stats at a glance. Zero clutter. Zero noise.</p>
           </div>
         </div>
       </div>
 
       <div class="col-md-6 col-lg-4 fade-in fade-in-delay-3">
-        <div class="card h-100 shadow-sm about-card">
+        <div class="about-card shadow-sm">
           <div class="card-body">
-            <i class="fas fa-code text-danger about-icon mb-3"></i>
-            <h5 class="card-title">Technologies Used</h5>
-            <p>
-              This project leverages the <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener">GitHub REST API</a>
-              to retrieve data. It's built using:
-            </p>
-            <ul class="text-start">
-              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django Logo" class="tech-logo"><strong>Django:</strong> Backend web framework for robust data handling.</li>
-              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap Logo" class="tech-logo"><strong>Bootstrap:</strong> Responsive UI framework for a modern look.</li>
-              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript Logo" class="tech-logo"><strong>JavaScript:</strong> Client-side interactivity for a dynamic user experience.</li>
-              <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-plain.svg" alt="HTML5 Logo" class="tech-logo"><strong>HTML5 & CSS3:</strong> For structuring and styling the web pages.</li>
-            </ul>
+            <i class="fas fa-heartbeat text-danger about-icon"></i>
+            <h5 class="card-title">Live Data, Always</h5>
+            <p class="card-text">We fetch directly from GitHub’s REST API for the freshest commit data — no delay, no cache mess.</p>
           </div>
         </div>
       </div>
 
       <div class="col-md-6 col-lg-4 fade-in fade-in-delay-4">
-        <div class="card h-100 shadow-sm about-card">
+        <div class="about-card shadow-sm">
           <div class="card-body">
-            <i class="fas fa-exclamation-triangle text-warning about-icon mb-3"></i>
-            <h5 class="card-title">Important Disclaimer</h5>
-            <p class="card-text">
-              gitTracker uses the GitHub API for data retrieval. Please be aware that public API requests have rate limits. Heavy usage may temporarily restrict access to GitHub data from this application due to these limits.
-            </p>
-            <p class="card-text mt-3">
-              This project is intended for educational purposes and as a demonstration of web development concepts. It is not affiliated with GitHub Inc.
-            </p>
+            <i class="fas fa-adjust text-secondary about-icon"></i>
+            <h5 class="card-title">Dark Mode Done Right</h5>
+            <p class="card-text">Switch between light and dark mode seamlessly, with beautiful readability across themes.</p>
           </div>
         </div>
       </div>
-
     </div>
+
+    <!-- Tech Stack -->
+    <div class="row mt-5 fade-in fade-in-delay-3">
+      <div class="col-md-10 mx-auto">
+        <div class="about-card text-start">
+          <h4 class="section-heading mb-3"><i class="fas fa-code text-success me-2"></i> Under the Hood</h4>
+          <ul class="ps-0">
+            <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" class="tech-logo"><strong>Django:</strong> Fast, secure, scalable backend</li>
+            <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" class="tech-logo"><strong>Bootstrap:</strong> Responsive front-end framework</li>
+            <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="tech-logo"><strong>JavaScript:</strong> Enhances interactivity and logic</li>
+            <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-plain.svg" class="tech-logo"><strong>HTML5 & CSS3:</strong> Clean markup and styling</li>
+          </ul>
+          <a href="https://github.com/your-repo-link" class="btn btn-outline-primary btn-sm mt-3" target="_blank">
+            <i class="fab fa-github me-1"></i> View gitTracker on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="row mt-5 fade-in fade-in-delay-4">
+      <div class="col-lg-10 mx-auto text-center">
+        <h4 class="fw-bold text-secondary mb-3">Have feedback or ideas?</h4>
+        <p class="text-muted">We’re always learning. <a href="mailto:you@example.com">Email us</a> or <a href="https://github.com/your-repo-link/issues" target="_blank">open an issue</a>.</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 {% endblock %}

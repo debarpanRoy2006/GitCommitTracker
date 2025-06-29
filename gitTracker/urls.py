@@ -17,7 +17,7 @@ urlpatterns = [
     path('api/get_commits/', views.get_commits_api, name='get_commits_api'),
     path('api/get_repos/', views.get_repos_api, name='get_repos_api'),
     path('api/get_profile/', views.get_github_profile_api, name='get_github_profile_api'), # New API endpoint for profile
-
+    
     # Removed GitHub OAuth related paths
     # path('github_login/', views.github_login_initiate, name='github_login_initiate'),
     # path('github_callback/', views.github_callback, name='github_callback'),
