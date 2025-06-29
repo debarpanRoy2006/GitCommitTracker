@@ -59,7 +59,7 @@ TEMPLATES = [
 ]
 
 # Gunicorn will serve the ASGI app
-ASGI_APPLICATION = "yourproject.asgi.application"
+ASGI_APPLICATION = "gitTracker.asgi.application"
 
 # Database configuration
 DATABASES = {
