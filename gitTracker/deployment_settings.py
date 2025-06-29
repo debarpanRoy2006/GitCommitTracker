@@ -39,7 +39,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
-ROOT_URLCONF = "yourproject.urls"
+ROOT_URLCONF = "gitTracker.urls"
 
 # Templates
 TEMPLATES = [
