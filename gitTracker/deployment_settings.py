@@ -2,10 +2,12 @@ import os
 import dj_database_url
 from .settings import *
 from .settings import BASE_DIR
+
 ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
-# Deployment settings for Heroku
 CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("RENDER_EXTERNAL_HOSTNAME")}']
+
 DEBUG = False
+
 SECRET_KEY = os.environ.get('SECRET_key')
 
 MIDDLEWARE = [
@@ -19,10 +21,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# CORS_ALLOWED_ORIGINS = [
-#     "https://debarpanroy2006.github.io",
-# ]
-STORAGES= {
+
+STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
         'LOCATION': os.path.join(BASE_DIR, 'media'),
@@ -31,6 +31,7 @@ STORAGES= {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
+
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
@@ -38,3 +39,5 @@ DATABASES = {
         ssl_require=True
     )
 }
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
