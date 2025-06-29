@@ -2,7 +2,7 @@ import os
 import dj_database_url
 from .settings import *
 from .settings import BASE_DIR
-ALLOWED_HOSTS = [os.environ.get['RENDER_EXTERNAL_HOSTNAME']]
+ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
 # Deployment settings for Heroku
 CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("RENDER_EXTERNAL_HOSTNAME")}']
 DEBUG = False
